@@ -17,7 +17,7 @@ def connect_to_wifi():
     while not wlan.isconnected():
         if rp2.bootsel_button() == 1:  # The connection process is cancelable
             sys.exit()
-        print('[debug]: Waiting for connection...')
+        print('[wifi]: Waiting for connection...')
         pico_led.on()  # Blinking LED when connecting
         sleep(0.5)
         pico_led.off()
@@ -35,7 +35,7 @@ def test_connection_to_broker():
     s = socket.socket()
     try:
         print("[test]: Testing raw TCP connection...")
-        s.settimeout(7)
+        s.settimeout(10)
         s.connect((env.MQTT_BROKER, 1883))
         print("[success]: TCP connection OK")
     except Exception as e:

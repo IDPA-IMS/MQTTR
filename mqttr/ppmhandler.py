@@ -83,7 +83,7 @@ if MODE == "deployment":
 
 else:
     def start_ppm_if_needed():
-        print("[PPM] No thread started.")
+        print("[PPM] Test mode. No thread started.")
 
 # =========================
 # PUBLIC API
