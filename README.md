@@ -19,12 +19,16 @@ It is laid out (hard coded) that:
 - the laptop is running a hotspot, and the Raspberry Pi Pico W is connected to the hotspot
 - the broker has `listener 1883 0.0.0.0` and `allow_anonymous true` in its config
 - firewall is disabled, or the laptop allows inbound connections on port 1883
-- the env.example.py file is renamed to env.py and the hotspot SSID and password are added
+- the env.example.py file is renamed to env.py, and the hotspot SSID and password are added
+- recommended. not required: use pycharm with the micropython plugin, and a run configuration called 'Execute' will be available.
 
 ## Usage
 
 0. Make sure you did the setup above.
-1. Upload all files from here directly to the Raspberry Pi Pico W and run the main.py file.
+1. Upload all files (except those that start with `.`) from here directly to the Raspberry Pi Pico W and run the main.py file.
+2. (the pico will have successfully connected to the broker if its LED stopped blinking)
+2. Go to `\.controller\` and run `startup.ps1` and your browser should open and go to [localhost:8000](http://localhost:8000/)
+3. Use the UI to control the drone.
 
 ## **DISCLAIMER**
 

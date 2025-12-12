@@ -48,11 +48,12 @@ def test_connection_to_broker():
     s = socket.socket()
     try:
         print("[test]: Testing raw TCP connection...")
-        s.settimeout(5)
+        s.settimeout(7)
         s.connect((env.MQTT_BROKER, 1883))
-        print("[test]: TCP connection OK")
+        print("[success]: TCP connection OK")
     except Exception as e:
         print("[error]: TCP connection failed:", e)
+        pico_led.off()
         sys.exit()
     finally:
         s.close()
@@ -75,13 +76,17 @@ mqtt_client = MQTTClient(
     port=1883
 )
 
+print("[mqtt]: MQTT started")
 mqtt_client.set_callback(message_handler)  # set callback function
+print("[mqtt]: Connecting to broker....")
 mqtt_client.connect()                      # connect to MQTT broker
-mqtt_client.subscribe(b"test/topic")       # subscribe to topic "test/topic"
+print("[mqtt]: Broker connected, subscribing to topics...")
+mqtt_client.subscribe("move/#")       # subscribe to topic "test/topic"
+print("[mqtt]: subscribed")
 
 # Listen for incoming messages indefinitely
 while True:
-    if rp2.bootsel_button() == 1:
+    if rp2.bootsel_button() == 1: # To shutdown, hold button for 1 second
         sleep(1)
         if rp2.bootsel_button() == 1:
             mqtt_client.disconnect()
@@ -91,4 +96,5 @@ while True:
             continue
     mqtt_client.check_msg()
     sleep(0.1)
+
 
