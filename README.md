@@ -2,54 +2,77 @@
 
 # MQTTR
 
-This is a lightweight MQTT Reciever for a Raspberry Pi Pico W to control (in our case) a 3D printed drone. It connects to an MQTT broker and listens for messages on a specified topic and uses the received messages to control the drone's motors via PWM signals.
+A lightweight MQTT **receiver** for the Raspberry Pi Pico W, designed to control (in our case) a 3D-printed drone.  
+The Pico W connects to an MQTT broker, listens for messages on a specified topic, and translates those messages into PWM signals used to control the drone’s motors.
 
 </div>
 
 > [!CAUTION]
-> This project is a work in progress and should be used with caution. Always test in a safe environment.
+> This project is a **work in progress**. Use with caution and always test in a safe, controlled environment.
+
+---
 
 ## Expected Setup
 
-RC = "laptop"
-mqtt broker = "mosquitto"
+**RC (Remote Controller):** Laptop  
+**MQTT Broker:** Mosquitto
 
-It is laid out (hard coded) that:
+The project is currently **hard-coded** with the following assumptions:
 
-- a mqtt broker is running on the laptop
-- (x) the laptop is running a hotspot, and the Raspberry Pi Pico W is connected to the hotspot
-- the broker has `listener 1883 0.0.0.0` and `allow_anonymous true` in its config
-- firewall is disabled, or the laptop allows inbound connections on port 1883
-- (x) the env.example.py file is renamed to env.py, and the hotspot SSID and password are added
-- (x) recommended. not required: use pycharm with the micropython plugin, and a run configuration called 'Execute' will be available.
+- An MQTT broker (Mosquitto) is running on the laptop
+- ❌ _(Required)_ The laptop is running a Wi-Fi hotspot, and the Raspberry Pi Pico W is connected to it
+- The broker configuration includes:
+  - `listener 1883 0.0.0.0`
+  - `listener 8081`
+  - `protocol websockets`
+  - `allow_anonymous true`
+- The laptop firewall is disabled **or** allows inbound TCP connections on port `1883`
+- ❌ _(Required)_ `env.example.py` has been renamed to `env.py`, with the hotspot SSID and password correctly set
+- ❌ _(Recommended, not required)_ PyCharm with the MicroPython plugin is used; a run configuration named **Execute** will then be available
+
+---
 
 ## Usage
 
-0. Make sure you did the setup above.
-1. (x) Upload all files (except those that start with `.`) from here directly to the Raspberry Pi Pico W and run the main.py file.
-2. (x) (the pico will have successfully connected to the broker if its LED stopped blinking)
-3. Go to `\.controller\` and run `startup.ps1` and your browser should open and go to [localhost:8000](http://localhost:8000/)
-4. (x) Use the UI to control the drone.
+0. Ensure all steps in **Expected Setup** have been completed.
+1. ❌ Upload all files from this repository **except those starting with `.`** directly to the Raspberry Pi Pico W.
+2. ❌ Run `main.py` on the Pico.
+   - The Pico has successfully connected to the broker when its LED stops blinking.
+3. On the laptop, navigate to `\.controller\` and run `startup.ps1`.
+   - Your browser should automatically open to:  
+     [http://localhost:8000](http://localhost:8000/)
+4. ❌ Use the web UI to control the drone.
+
+---
 
 ## Installation
 
-There is a installer script which will automate everything, except those steps marked with an x.
+An automated installer script is provided.  
+It completes **all steps except those marked with ❌** above.
 
-### **Run the installer with an elevated (ADMIN) powershell window:**
+### Run the installer in an **elevated (Administrator) PowerShell window**
 
-**Main**
+### Main Source
 
-`iex "& { $(iwr -useb 'https://raw.githubusercontent.com/IDPA-IMS/MQTTR/refs/heads/main/.installer.ps1') }"`
+```powershell
+iex "& { $(iwr -useb 'https://raw.githubusercontent.com/IDPA-IMS/MQTTR/refs/heads/main/.installer.ps1') }"
+```
 
-or
+### Mirror
 
-**Mirror**
+```powershell
+iex "& { $(iwr -useb 'https://idpa-ims.github.io/MQTTR/.installer.ps1') }"
+```
 
-`iex "& { $(iwr -useb 'https://idpa-ims.github.io/MQTTR/.installer.ps1') }"`
+---
 
-## **DISCLAIMER**
+## Disclaimer
 
-**THIS PROJECT IS PROVIDED "AS IS" WITHOUT ANY WARRANTIES, EXPRESS OR IMPLIED. THE AUTHOR DISCLAIMS ALL WARRANTIES INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.**
+**THIS PROJECT IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.
+THE AUTHOR DISCLAIMS ALL WARRANTIES, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES ARISING FROM THE USE OF THIS SOFTWARE.**
 
 > [!WARNING]
-> This project is intended for educational purposes only. Ensure you understand the risks involved in controlling a drone and always operate it in a safe environment.
+> This project is intended **for educational purposes only**.
+> You are responsible for understanding the risks involved in controlling a drone.
+> Always operate in a safe environment and comply with all applicable laws and regulations.
