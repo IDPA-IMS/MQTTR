@@ -58,12 +58,6 @@ It completes **all steps except those marked with ❌** above.
 iex "& { $(iwr -useb 'https://raw.githubusercontent.com/IDPA-IMS/MQTTR/refs/heads/main/.installer.ps1') }"
 ```
 
-### Mirror
-
-```powershell
-iex "& { $(iwr -useb 'https://idpa-ims.github.io/MQTTR/.installer.ps1') }"
-```
-
 ---
 
 ## Disclaimer
