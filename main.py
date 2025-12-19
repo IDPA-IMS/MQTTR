@@ -39,6 +39,8 @@ mqtt_client.subscribe("move/#")
 
 print("[mqtt]: subscribed")
 
+mqtt_client.publish("move/info", "[pico]: MQTTR connected")
+
 # Listen for incoming messages indefinitely
 while True:
     if rp2.bootsel_button() == 1: # To shutdown, hold button for 1 second

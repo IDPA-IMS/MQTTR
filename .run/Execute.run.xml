@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Execute" type="micropython-tools-configuration-type" factoryName="micropython-tools-execute-configuration" activateToolWindowBeforeRun="false">
-    <option name="path" value="D:\School-Stuff\IDPA\MQTTR\main.py" />
+    <option name="path" value="$PROJECT_DIR$\main.py" />
     <method v="2">
       <option name="RunConfigurationTask" enabled="false" run_configuration_name="Upload Project" run_configuration_type="micropython-tools-configuration-type" />
     </method>

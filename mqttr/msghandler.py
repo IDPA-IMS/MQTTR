@@ -63,6 +63,9 @@ def message_router(topic, msg):
     if isinstance(topic, bytes): topic = topic.decode()
     if isinstance(msg, bytes): msg = msg.decode()
 
+    if msg.startswith('[pico]'):
+        return
+
     handler = _topic_router.get(topic)
     if handler:
         print(f"\n[mqttr] Running {topic}")

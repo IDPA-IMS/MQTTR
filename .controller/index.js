@@ -51,6 +51,7 @@ client.subscribe("move/#");
 
 // Keybinding
 document.addEventListener("keydown", (e) => {
+    if (keyState[e.code]) return;
     keyState[e.code] = true;
 
     switch (e.code) {
