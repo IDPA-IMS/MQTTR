@@ -1,4 +1,3 @@
-# mqttr/msghandler.py
 from mqttr.ppm import (
     CHANNEL_CENTER,
     set_channel,
@@ -8,10 +7,8 @@ from mqttr.ppm import (
 # global temporary pulse list
 _pulses = []
 
-
 def get_pulses():
     return _pulses
-
 
 # safe constants for throttle / AUX
 HOVER_THROTTLE = CHANNEL_CENTER  # safe medium for hover throttle (hopefully)
@@ -29,39 +26,28 @@ AUX1 = 4
 def pulse(ch, value, duration_ms=250):
     _pulses.append(pulse_channel(ch, value, duration_ms))
 
-
 # Movement handlers
 def _handle_move_forward(): pulse(PITCH, 1400)
 
+def _handle_move_back(): pulse(PITCH, 1600)
 
-def _handle_move_back():    pulse(PITCH, 1600)
+def _handle_move_left(): pulse(ROLL, 1400)
 
+def _handle_move_right(): pulse(ROLL, 1600)
 
-def _handle_move_left():    pulse(ROLL, 1400)
+def _handle_yaw_left(): pulse(YAW, 1400)
 
+def _handle_yaw_right(): pulse(YAW, 1600)
 
-def _handle_move_right():   pulse(ROLL, 1600)
+# Throttle up/down
+def _handle_move_up(): pulse(THROTTLE, 1600)
 
+def _handle_move_down(): pulse(THROTTLE, 1200)
 
-def _handle_yaw_left():     pulse(YAW, 1400)
+# Arm motors
+def _handle_arm(): set_channel(AUX1, ARM_VALUE)
 
-
-def _handle_yaw_right():    pulse(YAW, 1600)
-
-
-# Throttle up/down (persistent until another command)
-def _handle_move_up():      pulse(THROTTLE, 1600)
-
-
-def _handle_move_down():    pulse(THROTTLE, 1200)
-
-
-# Arm motors separately
-def _handle_arm():    set_channel(AUX1, ARM_VALUE)
-
-
-def _handle_disarm():    set_channel(AUX1, DISARM_VALUE)
-
+def _handle_disarm(): set_channel(AUX1, DISARM_VALUE)
 
 # Topic router
 _topic_router = {
@@ -77,16 +63,11 @@ _topic_router = {
     "move/arm": _handle_arm,
 }
 
-
 def message_router(topic, msg):
     if isinstance(topic, bytes):
         topic = topic.decode()
     if isinstance(msg, bytes):
         msg = msg.decode()
-
-    # ignore messages from this Pico
-    if msg.startswith('[pico]'):
-        return
 
     handler = _topic_router.get(topic)
     if handler:
