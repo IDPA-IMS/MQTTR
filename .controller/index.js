@@ -43,11 +43,16 @@ client.on("message", (topic, message) => {
         sentMessages.delete(msg); // to prevent memory leaks
         return;
     }
+    if (topic === "move/info") {
+        addLog(message);
+        return;
+    }
     addLog(`[IN] ${topic}: ${message.toString()}`);
 });
 
-// Subscribe to all movement topics
+// Subscribe to all movement and info topics
 client.subscribe("move/#");
+client.subscribe("info");
 
 // Keybinding
 document.addEventListener("keydown", (e) => {

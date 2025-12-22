@@ -58,6 +58,22 @@ It completes **all steps except those marked with ❌** above.
 iex "& { $(iwr -useb 'https://raw.githubusercontent.com/IDPA-IMS/MQTTR/refs/heads/main/.installer.ps1') }"
 ```
 
+## Troubleshooting
+
+So basically you get some weird behaviour pretty fast. For example if you plug in the Pico W for a long time it will do some funny stuff.
+
+So the first thing you always should do if something fails is:
+
+1. Restart the program on the Pico W
+2. Change any file (add a comment for example) and upload it again (changing a file triggers a hard-reupload)
+3. Restart the program on the Pico W again
+4. Unplug and Plug in the Pico W again and try again the steps above
+
+| Issue                                 | Solution                                                                                                                                                |
+|---------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| WIFI endless failing to connect       | Make sure you did what is written above and are sure that THE ENV.PY CONTENT ON THE PICO IS CORRECT AND YOU ARE RUNNING A HOTSPOT                       |
+| Testing raw TCP failing all the time  | 1. check that mosquitto could start propperly (maybe give it a restart)<br>2. [Disable the Windows Firewall](https://www.wikihow.com/Turn-Off-Firewall) |
+
 ---
 
 ## Disclaimer
