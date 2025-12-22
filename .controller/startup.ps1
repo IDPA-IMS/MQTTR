@@ -4,19 +4,24 @@ $folderName = Split-Path $currentPath -Leaf
 
 clear
 
-try {
-    $pythonCheck = python --version 2>$null
-    if ($LASTEXITCODE -ne 0) {
+try
+{
+    $pythonCheck = python --version 2> $null
+    if ($LASTEXITCODE -ne 0)
+    {
         throw "Python not found."
     }
-} catch {
+}
+catch
+{
     Write-Host "Python is not installed or not in PATH." -ForegroundColor Red
     Write-Host "Please install Python from https://www.python.org/ and try again."
     exit 1
 }
 
 # Check if folder ends with ".controller"
-if ($folderName -ne ".controller") {
+if ($folderName -ne ".controller")
+{
     Write-Host "This script must be run inside a folder named '$requiredSuffix'" -ForegroundColor Red
     Write-Host "Current folder: $folderName"
     exit 1

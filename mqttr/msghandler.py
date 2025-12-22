@@ -1,52 +1,69 @@
-# msghandler.py
-
-from mqttr.ppmhandler import (
-    CHANNEL_MIN,
+# mqttr/msghandler.py
+from mqttr.ppm import (
     CHANNEL_CENTER,
     set_channel,
     pulse_channel,
-    start_ppm_if_needed
 )
 
-# Start PPM (safe in both modes)
-start_ppm_if_needed()
+# global temporary pulse list
+_pulses = []
 
-# CHANNEL MAPPING
-# 0 = Roll
-# 1 = Pitch
-# 2 = Throttle
-# 3 = Yaw
 
-def _handle_move_forward():
-    pulse_channel(1, 1400)   # pitch forward
+def get_pulses():
+    return _pulses
 
-def _handle_move_back():
-    pulse_channel(1, 1600)   # pitch backward
 
-def _handle_move_left():
-    pulse_channel(0, 1400)   # roll left
+# safe constants for throttle / AUX
+HOVER_THROTTLE = CHANNEL_CENTER  # safe medium for hover throttle (hopefully)
+ARM_VALUE = 1600  # AUX1 high = motors ON
+DISARM_VALUE = 1000  # AUX1 low = motors OFF
 
-def _handle_move_right():
-    pulse_channel(0, 1600)   # roll right
+# channel mapping
+ROLL = 0
+PITCH = 1
+THROTTLE = 2
+YAW = 3
+AUX1 = 4
 
-def _handle_move_up():
-    set_channel(2, 1600)     # throttle up
 
-def _handle_move_down():
-    set_channel(2, 1200)     # throttle down
+def pulse(ch, value, duration_ms=250):
+    _pulses.append(pulse_channel(ch, value, duration_ms))
 
-def _handle_yaw_left():
-    pulse_channel(3, 1400)   # rudder left
 
-def _handle_yaw_right():
-    pulse_channel(3, 1600)   # rudder right
+# Movement handlers
+def _handle_move_forward(): pulse(PITCH, 1400)
 
-def _handle_stop():
-    set_channel(0, CHANNEL_CENTER)
-    set_channel(1, CHANNEL_CENTER)
-    set_channel(2, CHANNEL_MIN)
-    set_channel(3, CHANNEL_CENTER)
 
+def _handle_move_back():    pulse(PITCH, 1600)
+
+
+def _handle_move_left():    pulse(ROLL, 1400)
+
+
+def _handle_move_right():   pulse(ROLL, 1600)
+
+
+def _handle_yaw_left():     pulse(YAW, 1400)
+
+
+def _handle_yaw_right():    pulse(YAW, 1600)
+
+
+# Throttle up/down (persistent until another command)
+def _handle_move_up():      pulse(THROTTLE, 1600)
+
+
+def _handle_move_down():    pulse(THROTTLE, 1200)
+
+
+# Arm motors separately
+def _handle_arm():    set_channel(AUX1, ARM_VALUE)
+
+
+def _handle_disarm():    set_channel(AUX1, DISARM_VALUE)
+
+
+# Topic router
 _topic_router = {
     "move/forward": _handle_move_forward,
     "move/back": _handle_move_back,
@@ -56,19 +73,24 @@ _topic_router = {
     "move/down": _handle_move_down,
     "move/yaw_left": _handle_yaw_left,
     "move/yaw_right": _handle_yaw_right,
-    "move/stop": _handle_stop,
+    "move/disarm": _handle_disarm,
+    "move/arm": _handle_arm,
 }
 
-def message_router(topic, msg):
-    if isinstance(topic, bytes): topic = topic.decode()
-    if isinstance(msg, bytes): msg = msg.decode()
 
+def message_router(topic, msg):
+    if isinstance(topic, bytes):
+        topic = topic.decode()
+    if isinstance(msg, bytes):
+        msg = msg.decode()
+
+    # ignore messages from this Pico
     if msg.startswith('[pico]'):
         return
 
     handler = _topic_router.get(topic)
     if handler:
-        print(f"\n[mqttr] Running {topic}")
+        print(f"[mqttr] Running {topic}")
         handler()
     else:
         print(f"[error] No handler for '{topic}' message '{msg}'")

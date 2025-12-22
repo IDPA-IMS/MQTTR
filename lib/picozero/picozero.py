@@ -1,6 +1,8 @@
+from time import ticks_ms, ticks_us, sleep
+
 from machine import Pin, PWM, Timer, ADC
 from micropython import schedule
-from time import ticks_ms, ticks_us, sleep
+
 
 ###############################################################################
 # EXCEPTIONS
@@ -468,7 +470,7 @@ class PWMOutputDevice(OutputDevice, PinMixin):
     _channels_used = {}
 
     def __init__(
-        self, pin, freq=100, duty_factor=65535, active_high=True, initial_value=False
+            self, pin, freq=100, duty_factor=65535, active_high=True, initial_value=False
     ):
         self._check_pwm_channel(pin)
         self._pin_num = pin
@@ -524,14 +526,14 @@ class PWMOutputDevice(OutputDevice, PinMixin):
         self._pwm.freq(freq)
 
     def blink(
-        self,
-        on_time=1,
-        off_time=None,
-        n=None,
-        wait=False,
-        fade_in_time=0,
-        fade_out_time=None,
-        fps=25,
+            self,
+            on_time=1,
+            off_time=None,
+            n=None,
+            wait=False,
+            fade_in_time=0,
+            fade_out_time=None,
+            fps=25,
     ):
         """
         Makes the device turn on and off repeatedly.
@@ -738,7 +740,7 @@ class PWMBuzzer(PWMOutputDevice):
     """
 
     def __init__(
-        self, pin, freq=440, duty_factor=1023, active_high=True, initial_value=False
+            self, pin, freq=440, duty_factor=1023, active_high=True, initial_value=False
     ):
         super().__init__(pin, freq, duty_factor, active_high, initial_value)
 
@@ -864,12 +866,12 @@ class Speaker(OutputDevice, PinMixin):
     }
 
     def __init__(
-        self,
-        pin,
-        initial_freq=440,
-        initial_volume=0,
-        duty_factor=1023,
-        active_high=True,
+            self,
+            pin,
+            initial_freq=440,
+            initial_volume=0,
+            duty_factor=1023,
+            active_high=True,
     ):
 
         self._pin_num = pin
@@ -947,14 +949,14 @@ class Speaker(OutputDevice, PinMixin):
             return None
 
     def beep(
-        self,
-        on_time=1,
-        off_time=None,
-        n=None,
-        wait=False,
-        fade_in_time=0,
-        fade_out_time=None,
-        fps=25,
+            self,
+            on_time=1,
+            off_time=None,
+            n=None,
+            wait=False,
+            fade_in_time=0,
+            fade_out_time=None,
+            fps=25,
     ):
         """
         Makes the buzzer turn on and off repeatedly.
@@ -1098,13 +1100,13 @@ class RGBLED(OutputDevice, PinsMixin):
     """
 
     def __init__(
-        self,
-        red=None,
-        green=None,
-        blue=None,
-        active_high=True,
-        initial_value=(0, 0, 0),
-        pwm=True,
+            self,
+            red=None,
+            green=None,
+            blue=None,
+            active_high=True,
+            initial_value=(0, 0, 0),
+            pwm=True,
     ):
         self._pin_nums = (red, green, blue)
         self._leds = ()
@@ -1236,13 +1238,13 @@ class RGBLED(OutputDevice, PinsMixin):
             self.value = (0, 0, 0)
 
     def blink(
-        self,
-        on_times=1,
-        fade_times=0,
-        colors=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
-        n=None,
-        wait=False,
-        fps=25,
+            self,
+            on_times=1,
+            fade_times=0,
+            colors=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
+            n=None,
+            wait=False,
+            fps=25,
     ):
         """
         Makes the device blink between colours repeatedly.
@@ -1303,12 +1305,12 @@ class RGBLED(OutputDevice, PinsMixin):
         self._start_change(blink_generator, n, wait)
 
     def pulse(
-        self,
-        fade_times=1,
-        colors=((0, 0, 0), (1, 0, 0), (0, 0, 0), (0, 1, 0), (0, 0, 0), (0, 0, 1)),
-        n=None,
-        wait=False,
-        fps=25,
+            self,
+            fade_times=1,
+            colors=((0, 0, 0), (1, 0, 0), (0, 0, 0), (0, 1, 0), (0, 0, 0), (0, 0, 1)),
+            n=None,
+            wait=False,
+            fps=25,
     ):
         """
         Makes the device fade between colours repeatedly.
@@ -1329,12 +1331,12 @@ class RGBLED(OutputDevice, PinsMixin):
         self.blink(on_times, fade_times, colors, n, wait, fps)
 
     def cycle(
-        self,
-        fade_times=1,
-        colors=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
-        n=None,
-        wait=False,
-        fps=25,
+            self,
+            fade_times=1,
+            colors=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
+            n=None,
+            wait=False,
+            fps=25,
     ):
         """
         Makes the device fade in and out repeatedly.
@@ -1708,7 +1710,7 @@ class Stepper(PinsMixin):
     }
 
     def __init__(
-        self, pins, step_sequence="full", step_delay=0.002, steps_per_rotation=2048
+            self, pins, step_sequence="full", step_delay=0.002, steps_per_rotation=2048
     ):
         if len(pins) != 4:
             raise ValueError("Stepper requires exactly 4 pins")
@@ -2022,13 +2024,13 @@ class Servo(PWMOutputDevice):
     """
 
     def __init__(
-        self,
-        pin,
-        initial_value=None,
-        min_pulse_width=1 / 1000,
-        max_pulse_width=2 / 1000,
-        frame_width=20 / 1000,
-        duty_factor=65535,
+            self,
+            pin,
+            initial_value=None,
+            min_pulse_width=1 / 1000,
+            max_pulse_width=2 / 1000,
+            frame_width=20 / 1000,
+            duty_factor=65535,
     ):
         self._min_duty = int((min_pulse_width / frame_width) * duty_factor)
         self._max_duty = int((max_pulse_width / frame_width) * duty_factor)
@@ -2187,7 +2189,7 @@ class DigitalInputDevice(InputDevice, PinMixin):
             time_since_last_callback = (
                 current_time_ms - self._last_callback_ms
                 if hasattr(self, "_last_callback_ms")
-                and self._last_callback_ms is not None
+                   and self._last_callback_ms is not None
                 else float("inf")
             )
 

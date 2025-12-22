@@ -1,6 +1,5 @@
 import socket
 import struct
-from binascii import hexlify
 
 
 class MQTTException(Exception):
@@ -9,15 +8,15 @@ class MQTTException(Exception):
 
 class MQTTClient:
     def __init__(
-        self,
-        client_id,
-        server,
-        port=0,
-        user=None,
-        password=None,
-        keepalive=0,
-        ssl=None,
-        ssl_params={},
+            self,
+            client_id,
+            server,
+            port=0,
+            user=None,
+            password=None,
+            keepalive=0,
+            ssl=None,
+            ssl_params={},
     ):
         if port == 0:
             port = 8883 if ssl else 1883

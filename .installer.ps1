@@ -1,13 +1,15 @@
 $ErrorActionPreference = 'Stop'
 # Setup script. Checks, installs and sets up all requirements
 
-try {
+try
+{
     # Check if running as Administrator
     $IsAdmin = ([Security.Principal.WindowsPrincipal] `
         [Security.Principal.WindowsIdentity]::GetCurrent()
     ).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 
-    if (-not $IsAdmin) {
+    if (-not $IsAdmin)
+    {
         Write-Warning "This script is not running with Administrator privileges. Please run as admin"
         exit 1
     }
@@ -17,22 +19,27 @@ try {
 
     $python = Get-Command python -ErrorAction SilentlyContinue
 
-    if ($null -eq $python) {
+    if ($null -eq $python)
+    {
         Write-Warning "Python is not installed. Installing Python using WinGet..."
 
-        if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+        if (-not (Get-Command winget -ErrorAction SilentlyContinue))
+        {
             throw "WinGet is not installed. Please install WinGet manually."
         }
 
         winget install Python.Python.3 --accept-package-agreements --accept-source-agreements
 
-        if ($LASTEXITCODE -ne 0) {
+        if ($LASTEXITCODE -ne 0)
+        {
             throw "Python installation failed. Exit code: $LASTEXITCODE"
         }
 
         Write-Host "Python installation completed successfully." -ForegroundColor Green
-    } else {
-        Write-Host "Python is already installed at: $($python.Source)" -ForegroundColor Green
+    }
+    else
+    {
+        Write-Host "Python is already installed at: $( $python.Source )" -ForegroundColor Green
     }
 
     Write-Host "Checking for Mosquitto installation..."
@@ -43,26 +50,32 @@ try {
     $mosqCmd = Get-Command mosquitto.exe -ErrorAction SilentlyContinue
     $mosqInstalled = $mosqCmd -or (Test-Path $mosqExe)
 
-    if (-not $mosqInstalled) {
+    if (-not $mosqInstalled)
+    {
 
         Write-Warning "Mosquitto is NOT installed. Installing with WinGet..."
 
-        if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+        if (-not (Get-Command winget -ErrorAction SilentlyContinue))
+        {
             throw "WinGet is not installed. Please install WinGet manually."
         }
 
         winget install EclipseFoundation.Mosquitto --accept-package-agreements --accept-source-agreements
 
-        if ($LASTEXITCODE -ne 0) {
+        if ($LASTEXITCODE -ne 0)
+        {
             throw "Mosquitto installation failed. Exit code: $LASTEXITCODE"
         }
 
         Write-Host "Mosquitto installed successfully." -ForegroundColor Green
-    } else {
+    }
+    else
+    {
         Write-Host "Mosquitto already installed successfully." -ForegroundColor Green
     }
 
-    if (-not (Test-Path $mosqDir)) {
+    if (-not (Test-Path $mosqDir))
+    {
         throw "Mosquitto directory not found - installation may be unusual."
     }
 
@@ -85,10 +98,11 @@ allow_anonymous true
 
     Write-Host "Configuring Windows Firewall for MQTT (TCP 1883)..." -ForegroundColor Cyan
 
-    $fwRuleNameIn  = "Mosquitto MQTT Inbound 1883"
+    $fwRuleNameIn = "Mosquitto MQTT Inbound 1883"
     $fwRuleNameOut = "Mosquitto MQTT Outbound 1883"
 
-    if (-not (Get-NetFirewallRule -DisplayName $fwRuleNameIn -ErrorAction SilentlyContinue)) {
+    if (-not (Get-NetFirewallRule -DisplayName $fwRuleNameIn -ErrorAction SilentlyContinue))
+    {
         New-NetFirewallRule `
             -DisplayName $fwRuleNameIn `
             -Direction Inbound `
@@ -98,7 +112,8 @@ allow_anonymous true
             -Profile Any
     }
 
-    if (-not (Get-NetFirewallRule -DisplayName $fwRuleNameOut -ErrorAction SilentlyContinue)) {
+    if (-not (Get-NetFirewallRule -DisplayName $fwRuleNameOut -ErrorAction SilentlyContinue))
+    {
         New-NetFirewallRule `
             -DisplayName $fwRuleNameOut `
             -Direction Outbound `
@@ -118,16 +133,19 @@ allow_anonymous true
     $desktopPath = [Environment]::GetFolderPath("Desktop")
     Set-Location $desktopPath
 
-    if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+    if (-not (Get-Command git -ErrorAction SilentlyContinue))
+    {
         throw "Git is not installed. Please install Git and re-run the script."
     }
 
     $repoUrl = "https://github.com/IDPA-IMS/MQTTR.git"
     $repoDir = Join-Path $desktopPath "MQTTR"
 
-    if (-not (Test-Path $repoDir)) {
+    if (-not (Test-Path $repoDir))
+    {
         git clone $repoUrl
-        if ($LASTEXITCODE -ne 0) {
+        if ($LASTEXITCODE -ne 0)
+        {
             throw "Git clone failed."
         }
     }
@@ -136,7 +154,8 @@ allow_anonymous true
 
     $controllerDir = Join-Path $repoDir ".controller"
 
-    if (-not (Test-Path $controllerDir)) {
+    if (-not (Test-Path $controllerDir))
+    {
         throw ".controller directory not found."
     }
 
@@ -147,7 +166,8 @@ allow_anonymous true
 
     Write-Host "All setup steps completed successfully." -ForegroundColor Green
 }
-catch {
+catch
+{
     Write-Host "A general failure occurred." -ForegroundColor Red
     Write-Host "Are you running this as admin?" -ForegroundColor Red
     exit 1

@@ -1,11 +1,15 @@
+import socket
+import sys
+from time import sleep
+
 import network
 import rp2
-import sys
-
-import socket
 from picozero import pico_led
-from time import sleep
+
 import env
+from lib.umqtt.simple import MQTTClient
+from mqttr.msghandler import message_router
+
 
 # Function to connect to WiFis
 def connect_to_wifi():
@@ -25,10 +29,10 @@ def connect_to_wifi():
 
     # Set gateway as mqtt broker
     env.MQTT_BROKER = wlan.ifconfig()[2]
-    local_ip = wlan.ifconfig()[0]
-    print(f'[log]: Connected with pico ip: {local_ip}')
+    print(f'[log]: Connected with pico ip: {wlan.ifconfig()[0]}')
     pico_led.on()
-    return local_ip
+    return wlan
+
 
 # Test connection to MQTT broker
 def test_connection_to_broker():
@@ -44,3 +48,32 @@ def test_connection_to_broker():
         sys.exit()
     finally:
         s.close()
+
+
+def connect_wifi():
+    print("[wifi]: Connecting...")
+    wlan = connect_to_wifi()
+    test_connection_to_broker()
+    print("[wifi]: Connected")
+    return wlan
+
+
+def connect_mqtt():
+    print("[mqtt]: Creating client")
+    client = MQTTClient(
+        client_id="MQTTR-PICO",
+        server=env.MQTT_BROKER,
+        port=1883,
+        keepalive=30
+    )
+
+    client.set_callback(message_router)
+    client.set_last_will("info", "[pico]: MQTTR disconnected")
+
+    print("[mqtt]: Connecting...")
+    client.connect()
+    client.subscribe("move/#")
+    client.publish("info", "[pico]: MQTTR connected")
+
+    print("[mqtt]: Connected and subscribed")
+    return client
