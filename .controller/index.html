@@ -4,115 +4,115 @@
 <head>
     <meta charset="UTF-8">
     <title>MQTT Drone Controller</title>
-    <link rel="stylesheet" href="index.css">
+    <link href="index.css" rel="stylesheet">
 </head>
 
 <body>
 
-    <h1>MQTTR - Controller</h1>
-    <div style="display: flex; justify-content: center; align-items: center;">
-        <div id="status" class="status disconnected">Status: Disconnected</div>
-        <div>
-            <p>Use the keyboard to control the drone. Press the button below for detailed instructions.</p>
-            <button id="helpBtn">Help / Key Mapping</button>
-        </div>
+<h1>MQTTR - Controller</h1>
+<div style="display: flex; justify-content: center; align-items: center;">
+    <div class="status disconnected" id="status">Status: Disconnected</div>
+    <div>
+        <p>Use the keyboard to control the drone. Press the button below for detailed instructions.</p>
+        <button id="helpBtn">Help / Key Mapping</button>
     </div>
+</div>
 
-    <div style="display: flex; justify-content: center; align-items: center;">
-        <div>
-            <h2 style="margin: 1px">Key Mapping</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Key</th>
-                        <th>Action</th>
-                        <th>MQTT Topic</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>W</td>
-                        <td>Forward</td>
-                        <td>move/forward</td>
-                    </tr>
-                    <tr>
-                        <td>S</td>
-                        <td>Back</td>
-                        <td>move/back</td>
-                    </tr>
-                    <tr>
-                        <td>A</td>
-                        <td>Left</td>
-                        <td>move/left</td>
-                    </tr>
-                    <tr>
-                        <td>D</td>
-                        <td>Right</td>
-                        <td>move/right</td>
-                    </tr>
-                    <tr>
-                        <td>Space</td>
-                        <td>Up</td>
-                        <td>move/up</td>
-                    </tr>
-                    <tr>
-                        <td>Shift (Left)</td>
-                        <td>Down</td>
-                        <td>move/down</td>
-                    </tr>
-                    <tr>
-                        <td>Q</td>
-                        <td>Rotate Left</td>
-                        <td>move/yaw_left</td>
-                    </tr>
-                    <tr>
-                        <td>E</td>
-                        <td>Rotate Right</td>
-                        <td>move/yaw_right</td>
-                    </tr>
-                    <tr>
-                        <td>O</td>
-                        <td>Emergency Stop</td>
-                        <td>move/stop</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div id="log"></div>
+<div style="display: flex; justify-content: center; align-items: center;">
+    <div>
+        <h2 style="margin: 1px">Key Mapping</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Key</th>
+                <th>Action</th>
+                <th>MQTT Topic</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>W</td>
+                <td>Forward</td>
+                <td>move/forward</td>
+            </tr>
+            <tr>
+                <td>S</td>
+                <td>Back</td>
+                <td>move/back</td>
+            </tr>
+            <tr>
+                <td>A</td>
+                <td>Left</td>
+                <td>move/left</td>
+            </tr>
+            <tr>
+                <td>D</td>
+                <td>Right</td>
+                <td>move/right</td>
+            </tr>
+            <tr>
+                <td>Space</td>
+                <td>Up</td>
+                <td>move/up</td>
+            </tr>
+            <tr>
+                <td>Shift (Left)</td>
+                <td>Down</td>
+                <td>move/down</td>
+            </tr>
+            <tr>
+                <td>Q</td>
+                <td>Rotate Left</td>
+                <td>move/yaw_left</td>
+            </tr>
+            <tr>
+                <td>E</td>
+                <td>Rotate Right</td>
+                <td>move/yaw_right</td>
+            </tr>
+            <tr>
+                <td>O</td>
+                <td>Emergency Stop</td>
+                <td>move/stop</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
+    <div id="log"></div>
+</div>
 
-    <div id="helpModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>How It Works</h2>
-            <p>
-                This web controller connects to an MQTT broker via WebSocket using <code>mqtt.js</code>. When you press a
-                key, it sends a message to the corresponding MQTT topic.
-                Messages you send appear in the log as <strong>[OUT]</strong>, and messages from other clients appear as
-                <strong>[IN]</strong>.
-            </p>
-            <strong>Notes:</strong>
-            <ul>
-                <li>The log auto-scrolls as new messages arrive.</li>
-                <li>MQTT topics are <strong>move/#</strong> by default;</li>
-            </ul>
-        </div>
+<div class="modal" id="helpModal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>How It Works</h2>
+        <p>
+            This web controller connects to an MQTT broker via WebSocket using <code>mqtt.js</code>. When you press a
+            key, it sends a message to the corresponding MQTT topic.
+            Messages you send appear in the log as <strong>[OUT]</strong>, and messages from other clients appear as
+            <strong>[IN]</strong>.
+        </p>
+        <strong>Notes:</strong>
+        <ul>
+            <li>The log auto-scrolls as new messages arrive.</li>
+            <li>MQTT topics are <strong>move/#</strong> by default;</li>
+        </ul>
     </div>
+</div>
 
-    <script>
-        // Modal
-        const modal = document.getElementById("helpModal");
-        const btn = document.getElementById("helpBtn");
-        const span = modal.querySelector(".close");
+<script>
+    // Modal
+    const modal = document.getElementById("helpModal");
+    const btn = document.getElementById("helpBtn");
+    const span = modal.querySelector(".close");
 
-        btn.onclick = () => modal.style.display = "block";
-        span.onclick = () => modal.style.display = "none";
-        window.onclick = (e) => {
-            if (e.target === modal) modal.style.display = "none";
-        }
-    </script>
+    btn.onclick = () => modal.style.display = "block";
+    span.onclick = () => modal.style.display = "none";
+    window.onclick = (e) => {
+        if (e.target === modal) modal.style.display = "none";
+    }
+</script>
 
-    <script type="module" src="index.js"></script>
+<script src="index.js" type="module"></script>
 
 </body>
 

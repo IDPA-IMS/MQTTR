@@ -94,3 +94,24 @@ button {
     padding: 8px 16px;
     cursor: pointer;
 }
+
+.log-system {
+    color: #888;
+    border-color: #888;
+}
+
+.log-info {
+    color: #0af;
+    background: rgba(0, 170, 255, 0.08);
+    border-color: #0af;
+}
+
+.log-in {
+    color: #0c0;
+    border-color: #0c0;
+}
+
+.log-out {
+    color: #fa0;
+    border-color: #fa0;
+}
