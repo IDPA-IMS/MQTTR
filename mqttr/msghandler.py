@@ -1,7 +1,7 @@
 from mqttr.ppm import (
     CHANNEL_CENTER,
     set_channel,
-    pulse_channel,
+    pulse_channel, CHANNEL_MIN,
 )
 
 # global temporary pulse list
@@ -14,6 +14,10 @@ def get_pulses():
 HOVER_THROTTLE = CHANNEL_CENTER  # safe medium for hover throttle (hopefully)
 ARM_VALUE = 1600  # AUX1 high = motors ON
 DISARM_VALUE = 1000  # AUX1 low = motors OFF
+CURRENT_THROTTLE = CHANNEL_MIN
+THROTTLE_STEP = 20
+RAMP_DELAY_MS = 80
+
 
 # channel mapping
 ROLL = 0
@@ -21,6 +25,8 @@ PITCH = 1
 THROTTLE = 2
 YAW = 3
 AUX1 = 4
+
+
 
 
 def pulse(ch, value, duration_ms=250):
@@ -40,14 +46,32 @@ def _handle_yaw_left(): pulse(YAW, 1400)
 def _handle_yaw_right(): pulse(YAW, 1600)
 
 # Throttle up/down
-def _handle_move_up(): pulse(THROTTLE, 1600)
+def _handle_move_up():
+    global CURRENT_THROTTLE
+    CURRENT_THROTTLE = min(1800, CURRENT_THROTTLE + THROTTLE_STEP)
+    set_channel(THROTTLE, CURRENT_THROTTLE)
 
-def _handle_move_down(): pulse(THROTTLE, 1200)
+def _handle_move_down():
+    global CURRENT_THROTTLE
+    CURRENT_THROTTLE = max(1000, CURRENT_THROTTLE - THROTTLE_STEP)
+    set_channel(THROTTLE, CURRENT_THROTTLE)
 
-# Arm motors
-def _handle_arm(): set_channel(AUX1, ARM_VALUE)
+# Dis-/Arm motors
+def _handle_arm():
+    global CURRENT_THROTTLE
+    # aux1 high = armed
+    set_channel(AUX1, ARM_VALUE)
+    # go to safe throttle
+    CURRENT_THROTTLE = 1000
+    set_channel(THROTTLE, CURRENT_THROTTLE)
 
-def _handle_disarm(): set_channel(AUX1, DISARM_VALUE)
+def _handle_disarm():
+    global CURRENT_THROTTLE
+    # reset throttle to safe value
+    CURRENT_THROTTLE = CHANNEL_MIN
+    set_channel(THROTTLE, CURRENT_THROTTLE)
+    # Aux1 low = disarmed
+    set_channel(AUX1, DISARM_VALUE)
 
 # Topic router
 _topic_router = {
