@@ -3,8 +3,8 @@
 # MQTTR
 
 A lightweight MQTT **receiver** for the Raspberry Pi Pico W, designed to control (in our case) a 3D-printed drone.  
-The Pico W connects to an MQTT broker, listens for messages on a specified topic, and translates those messages into PWM
-signals used to control the drone’s motors.
+The Pico W connects to an MQTT broker, listens for messages on a specified topic, and translates those messages into PPM
+signals used to control the drone's motors.
 
 </div>
 
